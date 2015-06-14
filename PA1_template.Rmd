@@ -1,0 +1,66 @@
+---
+title: "Reproducible Research project 1"
+author: "MCH"
+date: "Sunday, June 14, 2015"
+output: html_document
+---
+
+
+
+read in the data and convert the dates to a date value
+
+```{r, echo=TRUE} 
+setwd("D:/Research/Data Science/Reproducible research/repdata_data_activity")
+data = read.csv("activity.csv",header=T, colClass = c('integer','Date','integer'))
+
+library(dplyr)
+```
+
+
+Calculate the total number of steps taken per day
+```{r, echo=TRUE} 
+steps_total <- data %>%
+  filter(!is.na(steps))  %>%
+  group_by(date)  %>%
+  summarize(steps = sum(steps))  %>%
+  print
+```
+
+Make a histogram of the total number of steps taken each day
+```{r, echo=TRUE} 
+barplot(steps_total$steps, xlab="Date", ylab = "Total steps per day",)
+```
+
+
+Calculate and report the mean and median of the total number of steps taken per day
+```{r, echo=TRUE} 
+mean_steps <-mean(steps_total$steps, na.rm = TRUE)
+median_steps <- median(steps_total$steps, na.rm = TRUE)
+```
+
+Make a time series plot (i.e. type = "l") of the 5-minute interval (x-axis)
+and the average number of steps taken, averaged across all days (y-axis)
+```{r, echo=TRUE} 
+five_interval <- data %>%
+  filter(!is.na(steps)) %>%
+  group_by(interval) %>%
+  summarize(steps = mean(steps)) 
+```
+
+plot(five_interval, type ='l', ylab = "number of steps", main = ("Average steps by interval"))
+  ```   
+
+Which 5-minute interval, on average across all the days in the dataset, 
+contains the maximum number of steps?
+```{r, echo=TRUE} 
+max_step_interval <- five_interval$interval[which.max(five_interval$steps)]
+```
+Calculate and report the total number of missing values in the dataset 
+(i.e. the total number of rows with NAs)
+```{r, echo=TRUE} 
+missing_value <- sum(is.na(data$steps))
+```
+
+
+Sorry, ran out of time on this one. 
+
